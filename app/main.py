@@ -120,11 +120,25 @@ def main() -> None:
 
     # 8. Upload to Google Drive
     parent_folder_id: str = settings.get("drive", {}).get("parent_folder_id", "")
+    drive_required = os.getenv("DRIVE_REQUIRED", "true").lower() == "true"
+
     if parent_folder_id:
         logger.info("Uploading to Google Drive...")
-        upload_to_drive(run_id, [rendered, txt_path], parent_folder_id)
+        try:
+            upload_to_drive(run_id, [rendered, txt_path], parent_folder_id)
+        except Exception as e:
+            if drive_required:
+                logger.error("Drive 업로드 필수(DRIVE_REQUIRED=true)로 설정되어 있어 워크플로우를 중단합니다.")
+                sys.exit(1)
+            else:
+                logger.warning("Drive 업로드에 실패했지만, 워크플로우는 계속 진행합니다. (DRIVE_REQUIRED=false)")
     else:
-        logger.info("Drive upload skipped (GOOGLE_DRIVE_PARENT_FOLDER_ID not set)")
+        err_msg = "[Drive 오류] GOOGLE_DRIVE_PARENT_FOLDER_ID 환경변수가 설정되지 않았습니다."
+        if drive_required:
+            logger.error(f"{err_msg}\n→ 설정값을 확인하세요. (DRIVE_REQUIRED=true 상태라 중단합니다)")
+            sys.exit(1)
+        else:
+            logger.warning(f"{err_msg}\n→ 업로드를 건너뜁니다.")
 
     logger.info(f"=== DONE | Run ID: {run_id} | Output: {run_output_dir} ===")
 

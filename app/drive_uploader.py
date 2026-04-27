@@ -29,7 +29,10 @@ def _get_drive_service():
         content = sa_file.read_text(encoding="utf-8").strip()
         if not content:
             raise ValueError("service_account.json이 비어 있습니다.")
-        json.loads(content)  # validate JSON
+        sa_data = json.loads(content)  # validate JSON
+        client_email = sa_data.get("client_email", "unknown")
+        logger.info(f"✔ Service account JSON 로드 성공: {sa_path}")
+        logger.info(f"✔ 인증 계정(email): {client_email}")
     except (json.JSONDecodeError, ValueError) as e:
         raise ValueError(
             f"\n[Drive 오류] service_account.json 파일이 유효하지 않습니다: {e}\n"
@@ -74,20 +77,34 @@ def upload_to_drive(run_id: str, files: list[Path], parent_folder_id: str) -> Op
         logger.warning("GOOGLE_DRIVE_PARENT_FOLDER_ID not set, skipping Drive upload")
         return None
 
+    masked_id = parent_folder_id[:5] + "***" + parent_folder_id[-4:] if len(parent_folder_id) > 10 else "***"
+    logger.info(f"✔ Drive 업로드 준비 (Parent ID: {masked_id})")
+
     try:
         service = _get_drive_service()
+        logger.info("✔ Drive API 연결 및 권한 인증 완료, 폴더 생성 시도 중...")
         folder_id = _create_folder(service, run_id, parent_folder_id)
-        logger.info(f"Created Drive folder: {run_id} (id={folder_id})")
+        logger.info(f"✔ 런 폴더 생성 완료: {run_id} (ID={folder_id})")
 
         for f in files:
             if f.exists():
                 file_id = _upload_file(service, f, folder_id)
-                logger.info(f"Uploaded {f.name} (id={file_id})")
+                logger.info(f"✔ 업로드 성공: {f.name} (ID={file_id})")
             else:
-                logger.warning(f"File not found, skipping upload: {f}")
+                logger.warning(f"⚠ 업로드 실패 (파일 없음): {f}")
 
         return folder_id
 
     except Exception as e:
-        logger.error(f"[구글 드라이브 업로드 실패] {e}\n→ 파일은 로컬(data/output/{run_id})에 안전하게 저장되어 있습니다.")
-        return None
+        error_msg = str(e)
+        if "HttpError 404" in error_msg:
+            logger.error(f"[Drive 폴더 접근 오류 404] Parent Folder ID가 잘못되었거나 공유 권한이 없습니다.")
+            logger.error("→ 해결방법: 서비스 계정 이메일을 해당 드라이브 폴더에 '편집자' 권한으로 초대하세요.")
+        elif "HttpError 403" in error_msg:
+            logger.error(f"[Drive 권한/용량 오류 403] 서비스 계정의 저장소 용량이 초과되었거나 권한이 거부되었습니다.")
+            logger.error("→ 해결방법: 서비스 계정의 할당량을 확인하거나 다른 계정을 사용하세요.")
+        else:
+            logger.error(f"[Drive 업로드 실패] {e}")
+        
+        logger.error(f"→ 파일은 로컬(data/output/{run_id})에 안전하게 저장되어 있습니다.")
+        raise
