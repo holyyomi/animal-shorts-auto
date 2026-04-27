@@ -1,0 +1,60 @@
+name: Generate Animal Short
+
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: 'Animal search query for Pexels (e.g. "cat funny")'
+        required: false
+        default: 'animals funny'
+  # Uncomment to run on a cron schedule:
+  # schedule:
+  #   - cron: '0 9 * * *'   # Daily at 09:00 UTC
+  #   - cron: '0 9 * * 1'   # Every Monday at 09:00 UTC
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies (FFmpeg + ImageMagick for MoviePy)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg imagemagick
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      # --- service_account.json setup ---
+      # This step reads the raw JSON string from secrets and saves it to a file.
+      - name: Create service account JSON
+        if: env.GOOGLE_SERVICE_ACCOUNT_JSON != ''
+        run: |
+          echo "$GOOGLE_SERVICE_ACCOUNT_JSON" > service_account.json
+
+      - name: Run pipeline
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_DRIVE_PARENT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_PARENT_FOLDER_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: service_account.json
+        run: python -m app.main
+
+      - name: Upload output as artifact (7-day retention)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shorts-output-${{ github.run_number }}
+          path: data/output/
+          retention-days: 7

@@ -1,0 +1,181 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Animal Shorts — Template Definitions
+# Select active template via settings.yaml → project.template_type
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ── Template 1: cute_observer (기본값) ─────────────────────────────────────────
+cute_observer:
+  colors:
+    hook_text:   "yellow"
+    caption_text: "white"
+    ending_text:  "white"
+    hook_bg:      [18, 18, 28]
+    caption_bg:   [18, 18, 28]
+    ending_bg:    [110, 42, 0]
+    accent:       [205, 175, 90]
+    progress:     [205, 175, 90]
+    keyword_hl:   [255, 210, 60]
+
+  layout:
+    hook:
+      h:          156
+      font_size:  66
+      alpha:      0.80
+      radius:     0
+      stroke:     3
+    caption:
+      h:          164
+      bottom_margin: 96
+      inset_x:    24
+      font_size:  64
+      alpha:      0.76
+      radius:     18
+      stroke:     3
+    ending:
+      h:          188
+      font_size:  74
+      alpha:      0.84
+      radius:     18
+      stroke:     4
+    accent_h:     4
+    progress_h:   8
+    progress_bottom: 14
+
+  beats:
+    - [1.00,  0.00]
+    - [1.15, -0.05]
+    - [1.25,  0.08]
+    - [1.10,  0.00]
+
+  pattern_interrupt:
+    enabled:      true
+    zoom_start:   1.09
+    settle_time:  0.42
+
+  vignette_strength: 0.50
+
+  timing:
+    hook_slam:    0.08
+    caption_fade: 0.20
+    global_fade_in:  0.30
+    global_fade_out: 0.42
+
+  subtitle_style: cute_observer
+
+
+# ── Template 2: meme_reaction ──────────────────────────────────────────────────
+meme_reaction:
+  colors:
+    hook_text:    "white"
+    caption_text: "white"
+    ending_text:  "white"
+    hook_bg:      [190, 40, 95]
+    caption_bg:   [160, 30, 80]
+    ending_bg:    [100, 18, 60]
+    accent:       [255, 200, 220]
+    progress:     [255, 170, 200]
+    keyword_hl:   [255, 240, 245]
+
+  layout:
+    hook:
+      h:          148
+      font_size:  64
+      alpha:      0.82
+      radius:     24
+      stroke:     2
+    caption:
+      h:          160
+      bottom_margin: 100
+      inset_x:    32
+      font_size:  62
+      alpha:      0.78
+      radius:     22
+      stroke:     2
+    ending:
+      h:          180
+      font_size:  70
+      alpha:      0.84
+      radius:     22
+      stroke:     3
+    accent_h:     3
+    progress_h:   7
+    progress_bottom: 16
+
+  beats:
+    - [1.00,  0.00]
+    - [1.20,  0.05]
+    - [1.35, -0.10]
+    - [1.15,  0.05]
+
+  pattern_interrupt:
+    enabled:      true
+    zoom_start:   1.06
+    settle_time:  0.50
+
+  vignette_strength: 0.38
+
+  timing:
+    hook_slam:    0.14
+    caption_fade: 0.24
+    global_fade_in:  0.38
+    global_fade_out: 0.50
+
+  subtitle_style: meme_reaction
+
+
+# ── Template 3: mini_sketch ────────────────────────────────────────────────────
+mini_sketch:
+  colors:
+    hook_text:    "yellow"
+    caption_text: "white"
+    ending_text:  "yellow"
+    hook_bg:      [0, 0, 0]
+    caption_bg:   [0, 0, 0]
+    ending_bg:    [255, 100, 0]
+    accent:       [255, 200, 0]
+    progress:     [255, 200, 0]
+    keyword_hl:   [255, 165, 0]
+
+  layout:
+    hook:
+      h:          180
+      font_size:  72
+      alpha:      0.90
+      radius:     24
+      stroke:     4
+    caption:
+      h:          200
+      bottom_margin: 400
+      inset_x:    170
+      font_size:  68
+      alpha:      0.85
+      radius:     24
+      stroke:     3
+    ending:
+      h:          200
+      font_size:  74
+      alpha:      0.95
+      radius:     24
+      stroke:     4
+    accent_h:     6
+    progress_h:   12
+    progress_bottom: 24
+
+  beats:
+    - [1.00,  0.00]
+    - [1.08, -0.01]
+    - [1.12,  0.00]
+    - [1.06,  0.01]
+
+  pattern_interrupt:
+    enabled:      false
+
+  vignette_strength: 0.60
+
+  timing:
+    hook_slam:    0.05
+    caption_fade: 0.10
+    global_fade_in:  0.20
+    global_fade_out: 0.30
+
+  subtitle_style: mini_sketch

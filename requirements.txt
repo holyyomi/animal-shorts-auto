@@ -1,0 +1,9 @@
+moviepy==2.1.1
+imageio-ffmpeg>=0.4.9
+requests==2.32.3
+PyYAML==6.0.2
+python-dotenv==1.0.1
+google-api-python-client==2.169.0
+google-auth==2.40.1
+google-auth-oauthlib==1.2.2
+openai==1.76.0

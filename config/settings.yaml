@@ -1,0 +1,43 @@
+project:
+  name: Animal Shorts Auto Builder
+  language: ko
+  tone: funny                # funny / emotional / dramatic
+  template_type: cute_observer  # cute_observer / meme_reaction / mini_sketch
+
+video:
+  duration: 12  # 12초 기본 (옵션: 15초)
+  width: 1080
+  height: 1920
+  fps: 30
+  use_bgm: true
+
+# Typography
+# Place font files in assets/fonts/
+# Recommended: Pretendard-ExtraBold.otf (body), Pretendard-Black.otf (ending)
+# Download: https://github.com/orioncactus/pretendard/releases
+typography:
+  top_hook_font: "에어투체-8ExtraBold.otf"
+  body_font: "에어투체-8ExtraBold.otf"
+  ending_font: "에어투체-9Black.otf"
+  # If empty → auto-detect from assets/fonts/ → Windows system fonts fallback
+
+platforms:
+  - 유튜브 쇼츠
+  - 틱톡
+  - 네이버 클립
+  - 릴스
+  - 셀러비
+  - 카카오
+
+ai:
+  primary: openrouter
+  fallback: openai
+  openrouter_model: google/gemma-3-27b-it:free
+  openai_model: gpt-4o-mini
+
+drive:
+  parent_folder_id: ""  # Override via env: GOOGLE_DRIVE_PARENT_FOLDER_ID
+                        # Accepts full URL or raw folder ID — auto-sanitized
+
+output:
+  count: 1
