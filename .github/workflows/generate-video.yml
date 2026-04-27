@@ -49,6 +49,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GOOGLE_DRIVE_PARENT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_PARENT_FOLDER_ID }}
           GOOGLE_SERVICE_ACCOUNT_JSON: service_account.json
+          DRIVE_REQUIRED: 'false'
         run: python -m app.main
 
       - name: Upload output as artifact (7-day retention)
